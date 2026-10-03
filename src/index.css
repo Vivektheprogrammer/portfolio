@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-space: #04070d;
+  --bg-primary: #070c14;
+  --bg-surface: rgba(12, 19, 31, 0.82);
+  --bg-surface-elevated: rgba(18, 28, 46, 0.9);
+  --bg-glass: rgba(10, 16, 26, 0.72);
+  
+  --dial-cyan-light: #7dd3fc;
+  --dial-cyan: #38bdf8;
+  --dial-cyan-deep: #0284c7;
+  --bezel-navy: #0b1c36;
+  --bezel-navy-light: #162b4d;
+  --steel-white: #f8fafc;
+  --steel-silver: #cbd5e1;
+  --steel-muted: #64748b;
+  --steel-dark: #334155;
+  --lume-glow: #22d3ee;
+  --lume-glow-bright: #38bdf8;
+  --accent-gold: #fbbf24;
+
+  --border-subtle: rgba(56, 189, 248, 0.12);
+  --border-active: rgba(56, 189, 248, 0.45);
+  --border-steel: rgba(203, 213, 225, 0.18);
+
+  --font-serif: 'Cinzel', serif;
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-tech: 'Space Grotesk', sans-serif;
+
+  --ease-horological: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-space);
+  color: var(--steel-silver);
+  font-family: var(--font-sans);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Luxury Grain & Ambient Lighting in Background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 40%, rgba(14, 38, 70, 0.38) 0%, transparent 65%),
+    radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(15, 23, 42, 0.6) 0%, transparent 50%),
+    linear-gradient(180deg, #04070d 0%, #070c14 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-pill {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+}
+
+.steel-button {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid var(--border-steel);
+  color: var(--steel-white);
+  font-family: var(--font-tech);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-horological);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.steel-button:hover {
+  border-color: var(--dial-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.steel-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.steel-button.active {
+  background: linear-gradient(180deg, rgba(14, 45, 75, 0.95) 0%, rgba(8, 26, 45, 0.98) 100%);
+  border-color: var(--dial-cyan);
+  color: var(--dial-cyan-light);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+}
+
+/* Custom Scrollbar for Drawer/Dossier */
+.custom-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: rgba(10, 16, 26, 0.3);
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.25);
+  border-radius: 4px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--dial-cyan);
+}
+
+/* Typography styles */
+.font-serif { font-family: var(--font-serif); }
+.font-mono { font-family: var(--font-mono); }
+.font-tech { font-family: var(--font-tech); }
+
+/* Lume Mode Glow effect */
+.lume-active {
+  text-shadow: 0 0 8px var(--lume-glow), 0 0 20px rgba(34, 211, 238, 0.5);
+  color: #a5f3fc !important;
+}
+
+/* Touch targets */
+button, a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Accessible reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Responsive Section Typography & Layout */
+.section-title {
+  font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+  font-weight: 800;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  font-size: clamp(0.85rem, 1.1vw, 1.05rem);
+  color: #7dd3fc;
+  line-height: 1.5;
+}
+
+.section-body {
+  font-size: clamp(0.82rem, 1vw, 0.94rem);
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.section-card {
+  padding: clamp(0.95rem, 1.5vw, 1.45rem);
+  border-radius: 10px;
+}
+
+/* Responsive Mobile Layout Rules */
+.hide-on-desktop {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .hide-on-desktop {
+    display: inline-block !important;
+  }
+  .header-brand-sub {
+    font-size: 0.52rem !important;
+    white-space: nowrap;
+    letter-spacing: 0.02em !important;
+  }
+  .header-btn-label {
+    display: none !important;
+  }
+  .header-btn {
+    padding: 0.4rem 0.5rem !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    justify-content: center;
+  }
+  .deconstruct-label {
+    display: none !important;
+  }
+  .watch-hint-pill {
+    bottom: 1.25rem !important;
+    max-width: calc(100vw - 2rem) !important;
+    border-radius: 9999px !important;
+  }
+}
+
