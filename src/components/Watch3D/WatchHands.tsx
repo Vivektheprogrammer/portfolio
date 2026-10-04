@@ -7,9 +7,16 @@ interface WatchHandsProps {
   selectedMinute: number | null;
   isRealTime?: boolean;
   isTurbo?: boolean;
+  crownPosition?: number;
 }
 
-export const WatchHands: React.FC<WatchHandsProps> = ({ isTurbo }) => {
+export const WatchHands: React.FC<WatchHandsProps> = ({
+  selectedHour,
+  selectedMinute,
+  isRealTime = true,
+  isTurbo = false,
+  crownPosition = 0,
+}) => {
   const hourHandRef = useRef<THREE.Group>(null);
   const minuteHandRef = useRef<THREE.Group>(null);
   const secondHandRef = useRef<THREE.Group>(null);
@@ -25,16 +32,32 @@ export const WatchHands: React.FC<WatchHandsProps> = ({ isTurbo }) => {
     }
 
     const now = new Date();
-    const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
-    const minutes = now.getMinutes() + seconds / 60;
-    const hours = (now.getHours() % 12) + minutes / 60;
+    const liveSeconds = now.getSeconds() + now.getMilliseconds() / 1000;
+    const liveMinutes = now.getMinutes() + liveSeconds / 60;
+    const liveHours = (now.getHours() % 12) + liveMinutes / 60;
 
-    // Continuously sweeping and ticking live local real-time clock
-    const targetHourAngle = -(hours / 12) * Math.PI * 2;
-    const targetMinuteAngle = -(minutes / 60) * Math.PI * 2;
-    const targetSecondAngle = -(seconds / 60) * Math.PI * 2;
+    let targetHourAngle: number;
+    let targetMinuteAngle: number;
+    let targetSecondAngle: number = -(liveSeconds / 60) * Math.PI * 2;
 
-    const lerpFactor = Math.min(delta * 8, 0.35);
+    if (crownPosition === 2) {
+      // 2nd Pull: Profile Chapters & Time setting mode
+      targetHourAngle = -(selectedHour / 12) * Math.PI * 2;
+      targetMinuteAngle = -(selectedHour * 5 / 60) * Math.PI * 2;
+    } else if (crownPosition === 1) {
+      // 1st Pull: Material Finish setting (hands maintain current hour or live time)
+      targetHourAngle = !isRealTime ? -(selectedHour / 12) * Math.PI * 2 : -(liveHours / 12) * Math.PI * 2;
+      targetMinuteAngle = !isRealTime ? -(selectedHour * 5 / 60) * Math.PI * 2 : -(liveMinutes / 60) * Math.PI * 2;
+    } else if (!isRealTime) {
+      targetHourAngle = -(selectedHour / 12) * Math.PI * 2;
+      targetMinuteAngle = selectedMinute !== null ? -(selectedMinute / 60) * Math.PI * 2 : -(selectedHour * 5 / 60) * Math.PI * 2;
+    } else {
+      // Real-time live clock
+      targetHourAngle = -(liveHours / 12) * Math.PI * 2;
+      targetMinuteAngle = -(liveMinutes / 60) * Math.PI * 2;
+    }
+
+    const lerpFactor = Math.min(delta * 9, 0.38);
 
     if (hourHandRef.current) {
       let currentZ = hourHandRef.current.rotation.z;
@@ -48,7 +71,6 @@ export const WatchHands: React.FC<WatchHandsProps> = ({ isTurbo }) => {
       minuteHandRef.current.rotation.z = currentZ + diff * lerpFactor;
     }
 
-    // High-beat smooth second hand sweep
     if (secondHandRef.current) {
       secondHandRef.current.rotation.z = targetSecondAngle;
     }

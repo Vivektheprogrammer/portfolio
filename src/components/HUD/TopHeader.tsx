@@ -1,61 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { HOUR_SECTIONS } from '../../data/portfolioData';
-import { Watch, RotateCw, Layers } from 'lucide-react';
+import React from 'react';
+import { Watch } from 'lucide-react';
 import { horologyAudio } from '../../audio/soundEffects';
 
 interface TopHeaderProps {
-  selectedHour: number;
   onSelectHour: (hour: number) => void;
-  isRealTime: boolean;
-  onToggleRealTime: () => void;
-  isCasebackView: boolean;
-  onFlipToCaseback: () => void;
-  isMuted: boolean;
-  onToggleMute: () => void;
-  onOpenNavModal: () => void;
   onOpenGuide: () => void;
-  isExploded?: boolean;
-  onToggleExplode?: () => void;
-  isTerminalOpen?: boolean;
-  onToggleTerminal?: () => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
-  selectedHour,
   onSelectHour,
-  isRealTime,
-  onToggleRealTime,
-  isCasebackView,
-  onFlipToCaseback,
-  isMuted,
-  onToggleMute,
-  onOpenNavModal,
   onOpenGuide,
-  isExploded = false,
-  onToggleExplode,
-  isTerminalOpen = false,
-  onToggleTerminal,
 }) => {
-  const [timeStr, setTimeStr] = useState('');
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setTimeStr(
-        now.toLocaleTimeString('en-US', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        })
-      );
-    };
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const currentSection = HOUR_SECTIONS[selectedHour] || HOUR_SECTIONS[12];
 
   return (
     <header
@@ -118,59 +73,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         </div>
       </button>
 
-      {/* Right Header Horological Controls */}
+      {/* Right Header Horological Controls - Clean Minimalist GUIDE only */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
-        {/* Deconstruct / Explode 3D Caliber Toggle */}
-        {onToggleExplode && (
-          <button
-            onClick={() => {
-              horologyAudio.playMarkerSelect();
-              onToggleExplode();
-            }}
-            className={`steel-button header-btn ${isExploded ? 'active' : ''}`}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-              padding: '0.35rem 0.55rem',
-              fontSize: '0.72rem',
-              borderRadius: '6px',
-              borderColor: isExploded ? '#38bdf8' : undefined,
-            }}
-            title={isExploded ? 'Lock / Reassemble Caliber' : 'Deconstruct 3D Caliber Layers'}
-          >
-            <Layers size={13} color={isExploded ? '#38bdf8' : '#cbd5e1'} />
-            <span className="font-mono header-btn-label" style={{ fontWeight: 600, color: isExploded ? '#38bdf8' : '#e2e8f0' }}>
-              {isExploded ? 'ASSEMBLE' : 'DECONSTRUCT'}
-            </span>
-          </button>
-        )}
-
-        {/* Flip to Exhibition Caseback / Dial Toggle Button */}
-        <button
-          onClick={() => {
-            horologyAudio.playFlip();
-            onFlipToCaseback();
-          }}
-          className="steel-button header-btn"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.35rem',
-            padding: '0.35rem 0.55rem',
-            fontSize: '0.72rem',
-            borderRadius: '6px',
-            border: isCasebackView ? '1px solid #38bdf8' : '1px solid rgba(56, 189, 248, 0.25)',
-            background: isCasebackView ? 'rgba(56, 189, 248, 0.15)' : 'rgba(15, 23, 42, 0.65)',
-          }}
-          title={isCasebackView ? 'Flip to Dial' : 'Flip to Exhibition Caliber'}
-        >
-          <RotateCw size={13} color={isCasebackView ? '#38bdf8' : '#cbd5e1'} />
-          <span className="font-mono header-btn-label" style={{ fontWeight: 600, color: isCasebackView ? '#38bdf8' : '#e2e8f0' }}>
-            {isCasebackView ? 'DIAL' : 'CALIBER'}
-          </span>
-        </button>
-
         {/* Watch Guide Modal Trigger */}
         <button
           onClick={() => {
@@ -182,14 +86,16 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             display: 'flex',
             alignItems: 'center',
             gap: '0.35rem',
-            padding: '0.35rem 0.55rem',
-            fontSize: '0.72rem',
-            borderRadius: '6px',
+            padding: '0.4rem 0.75rem',
+            fontSize: '0.74rem',
+            borderRadius: '7px',
           }}
           title="Interactive Guide: How to operate the 3D watch"
         >
-          <Watch size={13} color="#38bdf8" />
-          <span className="font-mono header-btn-label" style={{ fontWeight: 700, color: '#ffffff' }}>GUIDE</span>
+          <Watch size={14} color="#38bdf8" />
+          <span className="font-mono header-btn-label" style={{ fontWeight: 700, color: '#ffffff', letterSpacing: '0.05em' }}>
+            GUIDE
+          </span>
         </button>
       </div>
     </header>

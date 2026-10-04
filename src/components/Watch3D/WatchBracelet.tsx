@@ -1,7 +1,14 @@
 import React, { useMemo } from 'react';
-import { createBraceletTexture } from './materials';
+import { createBraceletTexture, WatchFinish, WATCH_FINISHES } from './materials';
 
-export const WatchBracelet: React.FC = () => {
+interface WatchBraceletProps {
+  finish?: WatchFinish;
+  onCycleFinish?: () => void;
+}
+
+export const WatchBracelet: React.FC<WatchBraceletProps> = ({ finish = 'steel', onCycleFinish }) => {
+  const mat = WATCH_FINISHES[finish] || WATCH_FINISHES.steel;
+
   // Procedural brushed satin texture
   const braceletMap = useMemo(() => createBraceletTexture(), []);
 
@@ -49,7 +56,13 @@ export const WatchBracelet: React.FC = () => {
   }, []);
 
   return (
-    <group position={[0, 0, 0]}>
+    <group
+      position={[0, 0, 0]}
+      onClick={(e) => {
+        e.stopPropagation();
+        onCycleFinish?.();
+      }}
+    >
       {/* ========================================================
           SOLID FITTED END-LINKS (SEL) - Contoured between lugs
           ======================================================== */}
@@ -60,24 +73,24 @@ export const WatchBracelet: React.FC = () => {
           <boxGeometry args={[0.68, 0.32, 0.24]} />
           <meshStandardMaterial
             map={braceletMap}
-            metalness={0.98}
-            roughness={0.28}
-            color="#cbd5e1"
+            metalness={mat.metalness}
+            roughness={mat.roughness * 1.5}
+            color={mat.primary}
           />
         </mesh>
         <mesh position={[0.62, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[0.68, 0.32, 0.24]} />
           <meshStandardMaterial
             map={braceletMap}
-            metalness={0.98}
-            roughness={0.28}
-            color="#cbd5e1"
+            metalness={mat.metalness}
+            roughness={mat.roughness * 1.5}
+            color={mat.primary}
           />
         </mesh>
         {/* Elevated Mirror-Polished Center Link */}
         <mesh position={[0, 0, 0.012]} castShadow receiveShadow>
           <boxGeometry args={[0.76, 0.34, 0.26]} />
-          <meshStandardMaterial color="#ffffff" metalness={0.99} roughness={0.05} />
+          <meshStandardMaterial color={mat.accent} metalness={mat.metalness} roughness={mat.roughness * 0.4} />
         </mesh>
       </group>
 
@@ -88,24 +101,24 @@ export const WatchBracelet: React.FC = () => {
           <boxGeometry args={[0.68, 0.32, 0.24]} />
           <meshStandardMaterial
             map={braceletMap}
-            metalness={0.98}
-            roughness={0.28}
-            color="#cbd5e1"
+            metalness={mat.metalness}
+            roughness={mat.roughness * 1.5}
+            color={mat.primary}
           />
         </mesh>
         <mesh position={[0.62, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[0.68, 0.32, 0.24]} />
           <meshStandardMaterial
             map={braceletMap}
-            metalness={0.98}
-            roughness={0.28}
-            color="#cbd5e1"
+            metalness={mat.metalness}
+            roughness={mat.roughness * 1.5}
+            color={mat.primary}
           />
         </mesh>
         {/* Elevated Mirror-Polished Center Link */}
         <mesh position={[0, 0, 0.012]} castShadow receiveShadow>
           <boxGeometry args={[0.76, 0.34, 0.26]} />
-          <meshStandardMaterial color="#ffffff" metalness={0.99} roughness={0.05} />
+          <meshStandardMaterial color={mat.accent} metalness={mat.metalness} roughness={mat.roughness * 0.4} />
         </mesh>
       </group>
 
@@ -128,9 +141,9 @@ export const WatchBracelet: React.FC = () => {
               <boxGeometry args={[sideWidth, link.length * 0.96, 0.18]} />
               <meshStandardMaterial
                 map={braceletMap}
-                color="#cbd5e1"
-                metalness={0.98}
-                roughness={0.28}
+                color={mat.primary}
+                metalness={mat.metalness}
+                roughness={mat.roughness * 1.4}
               />
             </mesh>
 
@@ -138,9 +151,9 @@ export const WatchBracelet: React.FC = () => {
             <mesh position={[0, 0, 0.016]} castShadow receiveShadow>
               <boxGeometry args={[centerWidth, link.length * 0.96, 0.2]} />
               <meshStandardMaterial
-                color="#ffffff"
-                metalness={0.99}
-                roughness={0.05}
+                color={mat.accent}
+                metalness={mat.metalness}
+                roughness={mat.roughness * 0.35}
               />
             </mesh>
 
@@ -149,9 +162,9 @@ export const WatchBracelet: React.FC = () => {
               <boxGeometry args={[sideWidth, link.length * 0.96, 0.18]} />
               <meshStandardMaterial
                 map={braceletMap}
-                color="#cbd5e1"
-                metalness={0.98}
-                roughness={0.28}
+                color={mat.primary}
+                metalness={mat.metalness}
+                roughness={mat.roughness * 1.4}
               />
             </mesh>
 
@@ -203,32 +216,32 @@ export const WatchBracelet: React.FC = () => {
                   <boxGeometry args={[link.width * 1.04, 0.34, 0.21]} />
                   <meshStandardMaterial
                     map={braceletMap}
-                    color="#cbd5e1"
-                    metalness={0.98}
-                    roughness={0.24}
+                    color={mat.primary}
+                    metalness={mat.metalness}
+                    roughness={mat.roughness * 1.2}
                   />
                 </mesh>
 
                 {/* Elevated Mirror-Polished Center Clasp Shield */}
                 <mesh position={[0, 0, 0.015]} castShadow receiveShadow>
                   <boxGeometry args={[link.width * 0.46, 0.36, 0.23]} />
-                  <meshStandardMaterial color="#ffffff" metalness={0.99} roughness={0.05} />
+                  <meshStandardMaterial color={mat.accent} metalness={mat.metalness} roughness={mat.roughness * 0.3} />
                 </mesh>
 
                 {/* Safety Catch Bar (Beveled Edge) */}
                 <mesh position={[0, 0.16, 0.02]}>
                   <boxGeometry args={[link.width * 0.98, 0.06, 0.19]} />
-                  <meshStandardMaterial color="#94a3b8" metalness={0.98} roughness={0.2} />
+                  <meshStandardMaterial color={mat.secondary} metalness={mat.metalness} roughness={mat.roughness} />
                 </mesh>
 
                 {/* Twin Side Release Push-Buttons */}
                 <mesh position={[-link.width * 0.52 - 0.02, 0, 0]}>
                   <boxGeometry args={[0.04, 0.18, 0.14]} />
-                  <meshStandardMaterial color="#f1f5f9" metalness={0.99} roughness={0.1} />
+                  <meshStandardMaterial color={mat.accent} metalness={mat.metalness} roughness={0.1} />
                 </mesh>
                 <mesh position={[link.width * 0.52 + 0.02, 0, 0]}>
                   <boxGeometry args={[0.04, 0.18, 0.14]} />
-                  <meshStandardMaterial color="#f1f5f9" metalness={0.99} roughness={0.1} />
+                  <meshStandardMaterial color={mat.accent} metalness={mat.metalness} roughness={0.1} />
                 </mesh>
 
                 {/* VR Horological Emblem Accent */}

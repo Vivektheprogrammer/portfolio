@@ -8,6 +8,9 @@ interface WatchGuideProps {
   isOpen: boolean;
   onClose: () => void;
   isDrawerOpen?: boolean;
+  onCycleFinish?: () => void;
+  onCycleCrown?: () => void;
+  crownPosition?: number;
 }
 
 export const WatchGuide: React.FC<WatchGuideProps> = ({
@@ -16,6 +19,9 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
   isOpen,
   onClose,
   isDrawerOpen = false,
+  onCycleFinish,
+  onCycleCrown,
+  crownPosition = 0,
 }) => {
   const [hasSeenHint, setHasSeenHint] = useState(false);
 
@@ -41,16 +47,40 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
       desc: 'Click any minute marker (5, 10, 15, 20... 60) on the outer navy bezel to inspect technical architectures and proficiencies (Java, Python, Spring Boot, PostgreSQL, AWS, Docker, Kubernetes).',
     },
     {
-      id: 'crown',
-      icon: <RotateCw size={20} color="#38bdf8" />,
-      title: 'Crown & Exhibition Caseback',
-      badge: '3D Flip & Movement',
-      actionText: 'Flip Watch 180°',
+      id: 'crown-1',
+      icon: <Sparkles size={20} color="#fbbf24" />,
+      title: 'Crown Pull 1: Metal & Colour Setting',
+      badge: '1st Notch Pull (P)',
+      actionText: 'Pull 1 Click (P)',
       onAction: () => {
-        onFlipToCaseback();
+        if (onCycleCrown) onCycleCrown();
         onClose();
       },
-      desc: 'Click the stainless steel crown on the right side at 3 o\'clock (or click the rotor on the back) to flip the watch 180° and view the custom mechanical caliber movement and PoetByte portal.',
+      desc: 'Click the 3D crown knob once (or press "P") to pull to Position 1. Scroll your mouse wheel or swipe up/down on mobile to cycle case & bracelet finishes (316L Stainless Steel, 18k Rose Gold, DLC Stealth Black, Titanium).',
+    },
+    {
+      id: 'crown-2',
+      icon: <RotateCw size={20} color="#38bdf8" />,
+      title: 'Crown Pull 2: Profile & Time Setting',
+      badge: '2nd Notch Pull (P)',
+      actionText: 'Pull 2 Clicks (P)',
+      onAction: () => {
+        if (onCycleCrown) onCycleCrown();
+        onClose();
+      },
+      desc: 'Click the crown a 2nd time (or press "P") to pull to Position 2. Scroll your mouse wheel or swipe up/down on mobile to scrub through portfolio chapters (1–12), moving the hands and updating profiles in real time.',
+    },
+    {
+      id: 'crown-push',
+      icon: <CheckCircle2 size={20} color="#34d399" />,
+      title: 'Crown Push In: Return to Live Time',
+      badge: 'Automatic Sync',
+      actionText: 'Push Crown In',
+      onAction: () => {
+        if (onCycleCrown) onCycleCrown();
+        onClose();
+      },
+      desc: 'Click the crown again to push it back in flush. The hands will automatically sweep and synchronize with your current live local time.',
     },
     {
       id: 'orbit',
@@ -58,7 +88,19 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
       title: '360° Spatial Inspection',
       badge: '3D Drag & Orbit',
       actionText: 'Drag on Canvas',
-      desc: 'Click and drag anywhere around the watch in 3D space to orbit, tilt, and admire the craftsmanship, brushed steel case, and live sweeping watch hands from every angle.',
+      desc: 'When the crown is pushed in, click and drag anywhere in 3D space to orbit, tilt, and admire the craftsmanship, brushed steel case, and sweeping watch hands from every angle.',
+    },
+    {
+      id: 'caseback',
+      icon: <RotateCw size={20} color="#fbbf24" />,
+      title: 'Exhibition Sapphire Caseback',
+      badge: 'Caliber Movement (F)',
+      actionText: 'Flip Watch (F)',
+      onAction: () => {
+        onFlipToCaseback();
+        onClose();
+      },
+      desc: 'Press "F" or select Hour 06 to flip the watch and admire the skeleton automatic caliber movement, 24K gold engraved rotor, and Swiss escapement.',
     },
   ];
 
@@ -128,17 +170,17 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
             position: 'fixed',
             inset: 0,
             zIndex: 100,
-            background: 'rgba(2, 6, 14, 0.85)',
+            background: 'rgba(2, 6, 14, 0.88)',
             backdropFilter: 'blur(16px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '1.5rem',
+            padding: 'clamp(0.75rem, 3vw, 1.5rem)',
           }}
           onClick={onClose}
         >
           <div
-            className="glass-panel custom-scroll"
+            className="glass-panel custom-scroll guide-modal-container"
             style={{
               maxWidth: '680px',
               width: '100%',
@@ -147,36 +189,97 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
               borderRadius: '16px',
               border: '1px solid rgba(56, 189, 248, 0.25)',
               padding: '2rem',
-              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9)',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.95)',
+              boxSizing: 'border-box',
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', borderBottom: '1px solid rgba(56, 189, 248, 0.15)', paddingBottom: '1rem' }}>
-              <div>
-                <span className="font-mono" style={{ fontSize: '0.7rem', color: '#38bdf8', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '1.25rem', borderBottom: '1px solid rgba(56, 189, 248, 0.15)', paddingBottom: '1rem' }}>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <span className="font-mono" style={{ fontSize: '0.68rem', color: '#38bdf8', letterSpacing: '0.15em', textTransform: 'uppercase', display: 'block' }}>
                   HOROLOGICAL NAVIGATION MANUAL
                 </span>
-                <h2 className="font-serif" style={{ fontSize: '1.45rem', fontWeight: 800, color: '#f8fafc', margin: '0.2rem 0 0 0' }}>
+                <h2 className="font-serif" style={{ fontSize: 'clamp(1.2rem, 3.5vw, 1.45rem)', fontWeight: 800, color: '#f8fafc', margin: '0.25rem 0 0 0', lineHeight: 1.25 }}>
                   Controlling the Portfolio via the Watch
                 </h2>
               </div>
               <button
                 onClick={onClose}
                 className="steel-button"
-                style={{ padding: '0.45rem', borderRadius: '50%', minWidth: '36px', minHeight: '36px' }}
+                style={{ padding: '0.45rem', borderRadius: '50%', width: '38px', height: '38px', minWidth: '38px', minHeight: '38px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                title="Close guide"
               >
                 <X size={18} />
               </button>
             </div>
 
-            {/* Subtitle */}
-            <p style={{ fontSize: '0.86rem', color: '#cbd5e1', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              This entire portfolio is an interactive 3D timepiece. There are no static list menus—every section, technical skill, and deep dive is controlled directly by interacting with physical parts of the watch:
-            </p>
+            {/* Live Crown State Indicator Banner */}
+            <div
+              style={{
+                background: 'rgba(7, 16, 32, 0.75)',
+                border: '1px solid rgba(56, 189, 248, 0.22)',
+                borderRadius: '10px',
+                padding: '0.75rem 0.9rem',
+                marginBottom: '1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.45rem',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.35rem' }}>
+                <span className="font-mono" style={{ fontSize: '0.68rem', color: '#94a3b8', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  2-Stage Crown Quick Status
+                </span>
+                <span className="font-mono" style={{ fontSize: '0.68rem', color: '#38bdf8', fontWeight: 600 }}>
+                  Shortcut: Press "P"
+                </span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.4rem' }}>
+                <div
+                  style={{
+                    padding: '0.4rem 0.6rem',
+                    borderRadius: '6px',
+                    background: crownPosition === 0 ? 'rgba(56, 189, 248, 0.2)' : 'rgba(15, 23, 42, 0.5)',
+                    border: crownPosition === 0 ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.08)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <span style={{ fontSize: '0.66rem', color: crownPosition === 0 ? '#38bdf8' : '#94a3b8', fontWeight: 700 }}>POS 0 • PUSHED IN</span>
+                  <span style={{ fontSize: '0.62rem', color: '#cbd5e1' }}>Live Real Time Clock</span>
+                </div>
+                <div
+                  style={{
+                    padding: '0.4rem 0.6rem',
+                    borderRadius: '6px',
+                    background: crownPosition === 1 ? 'rgba(251, 191, 36, 0.2)' : 'rgba(15, 23, 42, 0.5)',
+                    border: crownPosition === 1 ? '1px solid #fbbf24' : '1px solid rgba(255, 255, 255, 0.08)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <span style={{ fontSize: '0.66rem', color: crownPosition === 1 ? '#fbbf24' : '#94a3b8', fontWeight: 700 }}>POS 1 • 1ST PULL</span>
+                  <span style={{ fontSize: '0.62rem', color: '#cbd5e1' }}>Scroll: Change Metal & Colour</span>
+                </div>
+                <div
+                  style={{
+                    padding: '0.4rem 0.6rem',
+                    borderRadius: '6px',
+                    background: crownPosition === 2 ? 'rgba(56, 189, 248, 0.25)' : 'rgba(15, 23, 42, 0.5)',
+                    border: crownPosition === 2 ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.08)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <span style={{ fontSize: '0.66rem', color: crownPosition === 2 ? '#38bdf8' : '#94a3b8', fontWeight: 700 }}>POS 2 • 2ND PULL</span>
+                  <span style={{ fontSize: '0.62rem', color: '#cbd5e1' }}>Scroll: Step Profile Chapters</span>
+                </div>
+              </div>
+            </div>
 
             {/* Guide Steps Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {guideSteps.map((step) => (
                 <div
                   key={step.id}
@@ -184,32 +287,35 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
                     background: 'rgba(10, 20, 35, 0.65)',
                     border: '1px solid rgba(56, 189, 248, 0.18)',
                     borderRadius: '12px',
-                    padding: '1.1rem 1.25rem',
+                    padding: '1rem 1.15rem',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '0.5rem',
+                    gap: '0.55rem',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <div className="guide-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', width: '100%' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0, flex: 1 }}>
                       <div
                         style={{
-                          width: '34px',
-                          height: '34px',
+                          width: '36px',
+                          height: '36px',
+                          minWidth: '36px',
+                          minHeight: '36px',
                           borderRadius: '8px',
                           background: 'rgba(56, 189, 248, 0.12)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
+                          flexShrink: 0,
                         }}
                       >
                         {step.icon}
                       </div>
-                      <div>
-                        <h4 style={{ fontSize: '0.96rem', fontWeight: 700, color: '#f8fafc', margin: 0 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <h4 style={{ fontSize: '0.94rem', fontWeight: 700, color: '#f8fafc', margin: 0, lineHeight: 1.3 }}>
                           {step.title}
                         </h4>
-                        <span className="font-mono" style={{ fontSize: '0.68rem', color: '#38bdf8' }}>
+                        <span className="font-mono" style={{ fontSize: '0.68rem', color: '#38bdf8', display: 'block', marginTop: '0.1rem' }}>
                           {step.badge}
                         </span>
                       </div>
@@ -221,16 +327,16 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
                           horologyAudio.playMarkerSelect();
                           step.onAction?.();
                         }}
-                        className="steel-button"
-                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.72rem', gap: '0.3rem' }}
+                        className="steel-button guide-card-action-btn"
+                        style={{ padding: '0.4rem 0.85rem', fontSize: '0.72rem', gap: '0.35rem', flexShrink: 0, whiteSpace: 'nowrap' }}
                       >
                         <span>{step.actionText}</span>
-                        <ChevronRight size={12} />
+                        <ChevronRight size={13} />
                       </button>
                     )}
                   </div>
 
-                  <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.55, margin: '0.25rem 0 0 0' }}>
+                  <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.55, margin: 0 }}>
                     {step.desc}
                   </p>
                 </div>
@@ -238,11 +344,11 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
             </div>
 
             {/* Quick 12-Hour Reference Chart */}
-            <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(4, 8, 16, 0.75)', borderRadius: '10px', border: '1px solid rgba(56, 189, 248, 0.12)' }}>
-              <span className="font-mono" style={{ fontSize: '0.68rem', color: '#64748b', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block', marginBottom: '0.6rem' }}>
+            <div style={{ marginTop: '1.25rem', padding: '0.9rem', background: 'rgba(4, 8, 16, 0.75)', borderRadius: '10px', border: '1px solid rgba(56, 189, 248, 0.12)' }}>
+              <span className="font-mono" style={{ fontSize: '0.68rem', color: '#64748b', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block', marginBottom: '0.55rem' }}>
                 12-Hour Dial Quick Reference Map
               </span>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.45rem' }}>
+              <div className="guide-ref-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.45rem' }}>
                 {[
                   { h: 12, l: 'Home' },
                   { h: 1, l: 'About' },
@@ -273,26 +379,39 @@ export const WatchGuide: React.FC<WatchGuideProps> = ({
                       gap: '0.4rem',
                       cursor: 'pointer',
                       textAlign: 'left',
+                      minHeight: '34px',
                     }}
                   >
                     <span className="font-mono" style={{ fontSize: '0.72rem', color: '#38bdf8', fontWeight: 700 }}>
                       {h.toString().padStart(2, '0')}
                     </span>
-                    <span style={{ fontSize: '0.72rem', color: '#cbd5e1' }}>{l}</span>
+                    <span style={{ fontSize: '0.72rem', color: '#cbd5e1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{l}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Footer Dismiss Button */}
-            <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'center', width: '100%' }}>
               <button
                 onClick={onClose}
                 className="steel-button active"
-                style={{ padding: '0.55rem 1.5rem', fontSize: '0.85rem' }}
+                style={{
+                  padding: '0.65rem 1.5rem',
+                  fontSize: '0.82rem',
+                  width: '100%',
+                  maxWidth: '340px',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: '0.5rem',
+                  whiteSpace: 'nowrap',
+                  letterSpacing: '0.05em',
+                  borderRadius: '8px',
+                }}
               >
-                <CheckCircle2 size={16} />
-                <span>Got It • Explore Watch</span>
+                <CheckCircle2 size={16} style={{ flexShrink: 0 }} />
+                <span style={{ whiteSpace: 'nowrap' }}>Got It • Explore Watch</span>
               </button>
             </div>
           </div>

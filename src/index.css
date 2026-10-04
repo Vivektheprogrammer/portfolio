@@ -219,5 +219,30 @@ button, a {
     max-width: calc(100vw - 2rem) !important;
     border-radius: 9999px !important;
   }
+
+  /* Responsive Guide Modal & Cards */
+  .guide-modal-container {
+    padding: 1.15rem 1rem !important;
+    border-radius: 14px !important;
+    max-height: 90vh !important;
+  }
+
+  .guide-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.65rem !important;
+  }
+
+  .guide-card-action-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .guide-ref-grid {
+    grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)) !important;
+    gap: 0.35rem !important;
+  }
 }
+
 

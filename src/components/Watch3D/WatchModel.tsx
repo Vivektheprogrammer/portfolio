@@ -11,6 +11,8 @@ import { WatchCrystal } from './WatchCrystal';
 import { WatchBracelet } from './WatchBracelet';
 import { WatchCaseback } from './WatchCaseback';
 
+import { WatchFinish } from './materials';
+
 interface WatchModelProps {
   selectedHour: number;
   onSelectHour: (hour: number) => void;
@@ -24,6 +26,11 @@ interface WatchModelProps {
   isExploded?: boolean;
   isMatrixMode?: boolean;
   isTurbo?: boolean;
+  crownPosition?: number;
+  onCycleCrown?: () => void;
+  finish?: WatchFinish;
+  onChangeFinish?: (finish: WatchFinish) => void;
+  onCycleFinish?: () => void;
 }
 
 export const WatchModel: React.FC<WatchModelProps> = ({
@@ -39,6 +46,11 @@ export const WatchModel: React.FC<WatchModelProps> = ({
   isExploded = false,
   isMatrixMode = false,
   isTurbo = false,
+  crownPosition = 0,
+  onCycleCrown = () => {},
+  finish = 'steel',
+  onChangeFinish = () => {},
+  onCycleFinish = () => {},
 }) => {
   const groupRef = useRef<THREE.Group>(null);
   const crystalGroupRef = useRef<THREE.Group>(null);
@@ -215,6 +227,7 @@ export const WatchModel: React.FC<WatchModelProps> = ({
           selectedMinute={selectedMinute}
           isRealTime={isRealTime}
           isTurbo={isTurbo}
+          crownPosition={crownPosition}
         />
         {showLabels && (
           <Html position={[2.7, 0.5, 0]} center distanceFactor={10}>
@@ -264,11 +277,15 @@ export const WatchModel: React.FC<WatchModelProps> = ({
       </group>
 
       {/* 5. MONOBLOC 316L CASE & CROWN LAYER (CENTER ANCHOR) */}
-      <WatchCase />
+      <WatchCase finish={finish} onCycleFinish={onCycleFinish} />
       <WatchCrown
-        isRealTime={isRealTime}
-        onToggleRealTime={onToggleRealTime}
-        onFlipToCaseback={onFlipToCaseback}
+        selectedHour={selectedHour}
+        onSelectHour={onSelectHour}
+        crownPosition={crownPosition}
+        onCycleCrown={onCycleCrown}
+        finish={finish}
+        onChangeFinish={onChangeFinish}
+        onCycleFinish={onCycleFinish}
       />
       {showLabels && (
         <Html position={[3.1, -0.6, 0]} center distanceFactor={10}>
@@ -317,7 +334,7 @@ export const WatchModel: React.FC<WatchModelProps> = ({
 
       {/* 7. 24K SKELETON ROTOR & BRACELET */}
       <group ref={braceletGroupRef}>
-        <WatchBracelet />
+        <WatchBracelet finish={finish} onCycleFinish={onCycleFinish} />
         {showLabels && (
           <Html position={[2.8, -2.0, 0]} center distanceFactor={10}>
             <div

@@ -68,18 +68,18 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
         {
           id: 'init-0',
           command: 'sys.init --caliber=3135',
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           output: (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-              <pre className="font-mono" style={{ color: '#38bdf8', fontSize: '0.72rem', margin: 0, lineHeight: 1.2 }}>
-{`
- ╔════════════════════════════════════════════════════════════════╗
- ║   CALIBER HOROLOGICAL KERNEL // CHRONO TERMINAL v3.12        ║
- ║   ENGINEER: VIVEK R                                          ║
- ╚════════════════════════════════════════════════════════════════╝
-`}
-              </pre>
-              <p style={{ color: '#94a3b8', margin: 0, fontSize: '0.8rem' }}>
+              <div style={{ padding: '0.55rem 0.75rem', background: 'rgba(56, 189, 248, 0.08)', borderRadius: '6px', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
+                <div className="font-mono" style={{ color: '#38bdf8', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.04em' }}>
+                  CALIBER HOROLOGICAL KERNEL // CHRONO-OS v3.12
+                </div>
+                <div className="font-mono" style={{ color: '#94a3b8', fontSize: '0.66rem', marginTop: '0.15rem' }}>
+                  ENGINEER: VIVEK R • SYSTEM INITIALIZED
+                </div>
+              </div>
+              <p style={{ color: '#cbd5e1', margin: 0, fontSize: '0.78rem', lineHeight: 1.5 }}>
                 System ready. Type <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>help</span> or click the quick-chips below to inspect diagnostics and control the 3D watch in real-time.
               </p>
             </div>
@@ -404,17 +404,19 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
 
         {/* Quick Command Chips Toolbar */}
         <div
+          className="custom-scroll"
           style={{
-            padding: '0.45rem 0.85rem',
+            padding: '0.4rem 0.65rem',
             background: 'rgba(10, 18, 34, 0.7)',
             borderBottom: '1px solid rgba(56, 189, 248, 0.1)',
             display: 'flex',
-            gap: '0.4rem',
+            gap: '0.35rem',
             overflowX: 'auto',
             alignItems: 'center',
+            WebkitOverflowScrolling: 'touch',
           }}
         >
-          <span className="font-mono" style={{ fontSize: '0.66rem', color: '#64748b', textTransform: 'uppercase', marginRight: '0.2rem', flexShrink: 0 }}>
+          <span className="font-mono" style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase', marginRight: '0.15rem', flexShrink: 0 }}>
             RUN:
           </span>
           {quickCommands.map((q) => (
@@ -423,11 +425,14 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
               onClick={() => executeCommand(q.cmd)}
               className="steel-button"
               style={{
-                fontSize: '0.7rem',
-                padding: '0.2rem 0.55rem',
+                fontSize: '0.68rem',
+                padding: '0.2rem 0.5rem',
                 flexShrink: 0,
+                minHeight: '26px',
+                minWidth: 'auto',
                 borderColor: q.highlight ? 'rgba(251, 191, 36, 0.4)' : undefined,
                 color: q.highlight ? '#fbbf24' : undefined,
+                whiteSpace: 'nowrap',
               }}
             >
               {q.label}
@@ -437,25 +442,28 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
 
         {/* Terminal Body & Stream Output */}
         <div
+          className="custom-scroll"
           style={{
             flex: 1,
-            maxHeight: '340px',
-            padding: '1rem',
+            maxHeight: '320px',
+            padding: '0.75rem',
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem',
+            gap: '0.65rem',
             fontFamily: 'monospace',
           }}
         >
           {history.map((item) => (
-            <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', fontSize: '0.76rem' }}>
-                <span style={{ color: '#38bdf8' }}>visitor@chrono-os:~$</span>
-                <span style={{ color: '#f8fafc', fontWeight: 600 }}>{item.command}</span>
-                <span style={{ marginLeft: 'auto', fontSize: '0.68rem', color: '#475569' }}>{item.timestamp}</span>
+            <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem', color: '#64748b', fontSize: '0.72rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', minWidth: 0, flex: 1 }}>
+                  <span style={{ color: '#38bdf8', fontWeight: 700 }}>&gt;$</span>
+                  <span style={{ color: '#f8fafc', fontWeight: 600, wordBreak: 'break-all' }}>{item.command}</span>
+                </div>
+                <span style={{ fontSize: '0.65rem', color: '#475569', flexShrink: 0 }}>{item.timestamp}</span>
               </div>
-              <div style={{ paddingLeft: '0.75rem', borderLeft: '2px solid rgba(56, 189, 248, 0.2)' }}>
+              <div style={{ paddingLeft: '0.65rem', borderLeft: '2px solid rgba(56, 189, 248, 0.2)', overflowX: 'hidden' }}>
                 {item.output}
               </div>
             </div>
@@ -466,18 +474,15 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
         {/* Terminal Input Bar */}
         <div
           style={{
-            padding: '0.65rem 1rem',
+            padding: '0.5rem 0.75rem',
             background: 'rgba(8, 14, 28, 0.95)',
             borderTop: '1px solid rgba(56, 189, 248, 0.2)',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.6rem',
+            gap: '0.45rem',
           }}
         >
-          <span className="font-mono hide-on-mobile" style={{ color: '#38bdf8', fontSize: '0.84rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
-            visitor@chrono-os:~$
-          </span>
-          <span className="font-mono hide-on-desktop" style={{ color: '#38bdf8', fontSize: '0.84rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+          <span className="font-mono" style={{ color: '#38bdf8', fontSize: '0.8rem', fontWeight: 700, whiteSpace: 'nowrap', flexShrink: 0 }}>
             &gt;$
           </span>
           <input
@@ -486,23 +491,24 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type 'help', 'explode', 'cat bio', 'sudo hire'..."
+            placeholder="Type 'help', 'explode', 'cat bio'..."
             style={{
               flex: 1,
+              minWidth: 0,
               background: 'transparent',
               border: 'none',
               outline: 'none',
               color: '#f8fafc',
               fontFamily: 'monospace',
-              fontSize: '0.88rem',
+              fontSize: '0.82rem',
             }}
           />
           <button
             onClick={() => executeCommand(inputVal)}
             className="steel-button active"
-            style={{ fontSize: '0.74rem', padding: '0.35rem 0.75rem' }}
+            style={{ fontSize: '0.7rem', padding: '0.3rem 0.65rem', minHeight: '30px', flexShrink: 0 }}
           >
-            EXECUTE
+            EXEC
           </button>
         </div>
       </div>

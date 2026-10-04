@@ -23,15 +23,17 @@ export const TechnologyInspector: React.FC<TechnologyInspectorProps> = ({
       className="glass-panel"
       style={{
         position: 'fixed',
-        bottom: '1.75rem',
-        left: '1.75rem',
+        bottom: '1.25rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
         maxWidth: '400px',
-        width: 'calc(100% - 3.5rem)',
+        width: 'calc(100% - 1.5rem)',
         zIndex: 35,
         borderRadius: '12px',
-        padding: '1.25rem',
+        padding: '1.15rem',
         border: '1px solid rgba(56, 189, 248, 0.35)',
         boxShadow: '0 16px 36px -8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.15)',
+        boxSizing: 'border-box',
         animation: 'fadeInUp 0.3s ease-out forwards',
       }}
     >

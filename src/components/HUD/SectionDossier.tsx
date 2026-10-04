@@ -198,44 +198,58 @@ export const SectionDossier: React.FC<SectionDossierProps> = ({
             position: 'sticky',
             top: 0,
             zIndex: 10,
-            background: 'rgba(7, 12, 20, 0.96)',
+            background: 'rgba(7, 12, 20, 0.98)',
             backdropFilter: 'blur(16px)',
             borderBottom: '1px solid rgba(56, 189, 248, 0.18)',
             flexShrink: 0,
-            padding: isMobile ? '0.45rem 0.85rem' : '0.55rem 1rem',
+            padding: isMobile ? '0.4rem 0.65rem' : '0.55rem 1rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            gap: '0.4rem',
           }}
         >
           {/* Navigation Stepper (Prev / Next Hour) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexShrink: 0 }}>
             <button
               onClick={handlePrev}
               className="steel-button"
-              style={{ padding: '0.25rem 0.45rem', fontSize: '0.68rem', minHeight: '30px', minWidth: '30px' }}
+              style={{ padding: '0.2rem 0.35rem', fontSize: '0.68rem', minHeight: '28px', minWidth: '28px', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title="Previous Hour Marker"
             >
               <ChevronLeft size={13} />
             </button>
-            <div className="glass-pill" style={{ padding: '0.2rem 0.5rem', borderRadius: '4px', textAlign: 'center' }}>
-              <span className="font-mono" style={{ fontSize: '0.72rem', color: '#38bdf8', fontWeight: 700 }}>
+            <div className="glass-pill" style={{ padding: '0.2rem 0.45rem', borderRadius: '4px', textAlign: 'center', minWidth: '52px' }}>
+              <span className="font-mono" style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 700 }}>
                 {selectedHour.toString().padStart(2, '0')} : 00
               </span>
             </div>
             <button
               onClick={handleNext}
               className="steel-button"
-              style={{ padding: '0.25rem 0.45rem', fontSize: '0.68rem', minHeight: '30px', minWidth: '30px' }}
+              style={{ padding: '0.2rem 0.35rem', fontSize: '0.68rem', minHeight: '28px', minWidth: '28px', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title="Next Hour Marker"
             >
               <ChevronRight size={13} />
             </button>
           </div>
 
-          {/* Hour Section Title Pill */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <span className="font-serif" style={{ fontSize: isMobile ? '0.76rem' : '0.84rem', color: '#f8fafc', fontWeight: 700, letterSpacing: '0.04em' }}>
+          {/* Centered Hour Section Title */}
+          <div style={{ flex: 1, minWidth: 0, textAlign: 'center', padding: '0 0.35rem' }}>
+            <span
+              className="font-serif"
+              style={{
+                fontSize: isMobile ? '0.78rem' : '0.88rem',
+                color: '#f8fafc',
+                fontWeight: 800,
+                letterSpacing: '0.05em',
+                display: 'block',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                textTransform: 'uppercase',
+              }}
+            >
               {currentSection.label}
             </span>
           </div>
@@ -247,7 +261,7 @@ export const SectionDossier: React.FC<SectionDossierProps> = ({
               onClose();
             }}
             className="steel-button"
-            style={{ padding: '0.25rem', minWidth: '28px', minHeight: '28px' }}
+            style={{ padding: '0.2rem', minWidth: '28px', minHeight: '28px', width: '28px', height: '28px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             title="Minimize Dossier"
           >
             <X size={14} />

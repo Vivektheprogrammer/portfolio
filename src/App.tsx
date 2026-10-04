@@ -8,6 +8,9 @@ import { WatchGuide } from './components/HUD/WatchGuide';
 import { CaliberTerminal } from './components/HUD/CaliberTerminal';
 import { WebGLFallback } from './components/Fallback/WebGLFallback';
 
+import { WatchFinish } from './components/Watch3D/materials';
+import { horologyAudio } from './audio/soundEffects';
+
 export const App: React.FC = () => {
   const [selectedHour, setSelectedHour] = useState<number>(12);
   const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
@@ -17,6 +20,10 @@ export const App: React.FC = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isWebGLSupported, setIsWebGLSupported] = useState<boolean>(true);
   const [showDesktopTip, setShowDesktopTip] = useState<boolean>(true);
+
+  // Luxury Watch Crown (0: Pushed in / Live Time, 1: Material Setting, 2: Profile/Time Setting) & Finish State
+  const [crownPosition, setCrownPosition] = useState<number>(0);
+  const [watchFinish, setWatchFinish] = useState<WatchFinish>('steel');
 
   // Crazy Interactive Caliber Engine States
   const [isExploded, setIsExploded] = useState<boolean>(false);
@@ -64,6 +71,39 @@ export const App: React.FC = () => {
     }
   }, [isCasebackView]);
 
+  // Handler for 2-stage crown pull / push (0 -> 1 -> 2 -> 0)
+  const handleCycleCrown = useCallback(() => {
+    setCrownPosition((prev) => {
+      const next = (prev + 1) % 3;
+      if (next === 1) {
+        // 1st pull: Material Finish / Colour mode
+        setIsRealTime(false);
+        setIsDrawerOpen(false);
+        horologyAudio.playCrownPull();
+      } else if (next === 2) {
+        // 2nd pull: Profile Chapters / Time mode
+        setIsRealTime(false);
+        horologyAudio.playCrownPull();
+      } else {
+        // Pushed back in: automatically return to current live time!
+        setIsRealTime(true);
+        horologyAudio.playCrownPush();
+      }
+      return next;
+    });
+  }, []);
+
+  // Handler for cycling watch finish / metal material
+  const handleCycleFinish = useCallback(() => {
+    const finishes: WatchFinish[] = ['steel', 'gold', 'black', 'titanium'];
+    setWatchFinish((prev) => {
+      const idx = finishes.indexOf(prev);
+      const next = finishes[(idx + 1) % finishes.length];
+      horologyAudio.playCrownRatchet();
+      return next;
+    });
+  }, []);
+
   // Handler for selecting a minute from bezel
   const handleSelectMinute = useCallback((minute: number) => {
     setSelectedMinute(minute);
@@ -82,31 +122,23 @@ export const App: React.FC = () => {
         setIsExploded((prev) => !prev);
       } else if (e.key === 'c' || e.key === 'C') {
         setIsTerminalOpen((prev) => !prev);
+      } else if (e.key === 'p' || e.key === 'P' || e.key === 'w' || e.key === 'W') {
+        handleCycleCrown();
+      } else if (e.key === 'm' || e.key === 'M') {
+        handleCycleFinish();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [handleCycleCrown, handleCycleFinish]);
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', background: '#04070d' }}>
-      {/* Clean Minimalist Top Header with Explode & CLI Triggers */}
+      {/* Clean Top Header with Brand on Left and GUIDE on Right */}
       <TopHeader
-        selectedHour={selectedHour}
         onSelectHour={handleSelectHour}
-        isRealTime={isRealTime}
-        onToggleRealTime={() => setIsRealTime((prev) => !prev)}
-        isCasebackView={isCasebackView}
-        onFlipToCaseback={() => setIsCasebackView((prev) => !prev)}
-        isMuted={false}
-        onToggleMute={() => {}}
-        onOpenNavModal={() => {}}
         onOpenGuide={() => setIsGuideOpen(true)}
-        isExploded={isExploded}
-        onToggleExplode={() => setIsExploded((prev) => !prev)}
-        isTerminalOpen={isTerminalOpen}
-        onToggleTerminal={() => setIsTerminalOpen((prev) => !prev)}
       />
 
       {/* Friendly Mobile Note: Prefer Desktop for Best 3D Horological Experience */}
@@ -186,6 +218,9 @@ export const App: React.FC = () => {
         isOpen={isGuideOpen}
         onClose={() => setIsGuideOpen(false)}
         isDrawerOpen={isDrawerOpen}
+        onCycleFinish={handleCycleFinish}
+        onCycleCrown={handleCycleCrown}
+        crownPosition={crownPosition}
       />
 
       {/* Primary 3D Watch Experience or 2D WebGL Fallback */}
@@ -206,6 +241,11 @@ export const App: React.FC = () => {
             isExploded={isExploded}
             isMatrixMode={isMatrixMode}
             isTurbo={isTurbo}
+            crownPosition={crownPosition}
+            onCycleCrown={handleCycleCrown}
+            finish={watchFinish}
+            onChangeFinish={setWatchFinish}
+            onCycleFinish={handleCycleFinish}
           />
         ) : (
           <WebGLFallback

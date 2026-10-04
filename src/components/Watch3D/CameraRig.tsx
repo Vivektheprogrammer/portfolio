@@ -9,6 +9,7 @@ interface CameraRigProps {
   isCasebackView: boolean;
   isDrawerOpen: boolean;
   isMobile: boolean;
+  crownPosition?: number;
 }
 
 export const CameraRig: React.FC<CameraRigProps> = ({
@@ -16,6 +17,7 @@ export const CameraRig: React.FC<CameraRigProps> = ({
   isCasebackView,
   isDrawerOpen,
   isMobile,
+  crownPosition = 0,
 }) => {
   const { camera } = useThree();
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -46,7 +48,7 @@ export const CameraRig: React.FC<CameraRigProps> = ({
         targetLookAt.current.set(0, 0, 0);
       }
     }
-  }, [selectedHour, isDrawerOpen, isMobile, isCasebackView]);
+  }, [selectedHour, isDrawerOpen, isMobile, isCasebackView, crownPosition]);
 
   useFrame((_, delta) => {
     // Only reposition when a programmatic chapter/view change is active
@@ -70,7 +72,8 @@ export const CameraRig: React.FC<CameraRigProps> = ({
     <OrbitControls
       ref={controlsRef}
       enablePan={false}
-      enableZoom={true}
+      enableZoom={crownPosition === 0}
+      enableRotate={crownPosition === 0}
       minDistance={3.0}
       maxDistance={12.0}
       minPolarAngle={0.05}

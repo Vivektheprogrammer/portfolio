@@ -455,4 +455,54 @@ export function createBraceletTexture(): THREE.CanvasTexture {
   return texture;
 }
 
+export type WatchFinish = 'steel' | 'gold' | 'black' | 'titanium';
+export const WATCH_FINISH_KEYS: WatchFinish[] = ['steel', 'gold', 'black', 'titanium'];
 
+export interface FinishConfig {
+  name: string;
+  badge: string;
+  primary: string;
+  secondary: string;
+  accent: string;
+  metalness: number;
+  roughness: number;
+}
+
+export const WATCH_FINISHES: Record<WatchFinish, FinishConfig> = {
+  steel: {
+    name: '316L Stainless Steel',
+    badge: 'Classic Silver',
+    primary: '#cbd5e1',
+    secondary: '#94a3b8',
+    accent: '#f8fafc',
+    metalness: 0.98,
+    roughness: 0.16,
+  },
+  gold: {
+    name: '18K Rose Gold',
+    badge: 'Luxury Precious',
+    primary: '#f59e0b',
+    secondary: '#d97706',
+    accent: '#fef3c7',
+    metalness: 0.96,
+    roughness: 0.18,
+  },
+  black: {
+    name: 'Stealth DLC Carbon',
+    badge: 'Matte Shadow',
+    primary: '#1e293b',
+    secondary: '#0f172a',
+    accent: '#334155',
+    metalness: 0.88,
+    roughness: 0.32,
+  },
+  titanium: {
+    name: 'Grade 5 Titanium',
+    badge: 'Aerospace Satin',
+    primary: '#64748b',
+    secondary: '#475569',
+    accent: '#94a3b8',
+    metalness: 0.92,
+    roughness: 0.26,
+  },
+};

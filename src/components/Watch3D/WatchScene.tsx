@@ -4,6 +4,8 @@ import { ContactShadows, Float, Loader, Environment } from '@react-three/drei';
 import { WatchModel } from './WatchModel';
 import { CameraRig } from './CameraRig';
 
+import { WatchFinish } from './materials';
+
 interface WatchSceneProps {
   selectedHour: number;
   onSelectHour: (hour: number) => void;
@@ -20,6 +22,11 @@ interface WatchSceneProps {
   isExploded?: boolean;
   isMatrixMode?: boolean;
   isTurbo?: boolean;
+  crownPosition?: number;
+  onCycleCrown?: () => void;
+  finish?: WatchFinish;
+  onChangeFinish?: (finish: WatchFinish) => void;
+  onCycleFinish?: () => void;
 }
 
 export const WatchScene: React.FC<WatchSceneProps> = ({
@@ -37,6 +44,11 @@ export const WatchScene: React.FC<WatchSceneProps> = ({
   isExploded = false,
   isMatrixMode = false,
   isTurbo = false,
+  crownPosition = 0,
+  onCycleCrown = () => {},
+  finish = 'steel',
+  onChangeFinish = () => {},
+  onCycleFinish = () => {},
 }) => {
   return (
     <div style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
@@ -122,6 +134,11 @@ export const WatchScene: React.FC<WatchSceneProps> = ({
               isExploded={isExploded}
               isMatrixMode={isMatrixMode}
               isTurbo={isTurbo}
+              crownPosition={crownPosition}
+              onCycleCrown={onCycleCrown}
+              finish={finish}
+              onChangeFinish={onChangeFinish}
+              onCycleFinish={onCycleFinish}
             />
           </group>
 
@@ -140,6 +157,7 @@ export const WatchScene: React.FC<WatchSceneProps> = ({
             isCasebackView={isCasebackView}
             isDrawerOpen={isDrawerOpen}
             isMobile={isMobile}
+            crownPosition={crownPosition}
           />
         </Suspense>
       </Canvas>
